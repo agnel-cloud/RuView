@@ -79,6 +79,8 @@ RuView turns ordinary WiFi into a contactless sensor. A $9 ESP32 board reads the
 docker pull ruvnet/wifi-densepose:latest
 docker run -p 3000:3000 ruvnet/wifi-densepose:latest
 # Open http://localhost:3000
+# CasaOS / docker compose? See docs/DOCKER-CASAOS.md (ready-made
+# docker-compose.yml with an app tile)
 
 # Option 2a: Live sensing with ESP32-S3 hardware ($9)
 # Flash firmware, provision WiFi, and start sensing:
@@ -610,6 +612,7 @@ Verify the plugin structure: `bash plugins/ruview/scripts/smoke.sh`. Full detail
 | Document | Description |
 |----------|-------------|
 | [User Guide](docs/user-guide.md) | Step-by-step guide: installation, first run, API usage, hardware setup, training |
+| [Docker & CasaOS](docs/DOCKER-CASAOS.md) | Run the sensing server via Docker / `docker-compose.yml`, import as a CasaOS app tile, and connect ESP32-S3 nodes |
 | [Build Guide](docs/build-guide.md) | Building from source (Rust and Python) |
 | [**Home Assistant + Matter Integration**](docs/integrations/home-assistant.md) | **Works with Home Assistant** via MQTT auto-discovery + **Works with Matter** (Apple Home / Google Home / Alexa / SmartThings) — full entity catalog, 3 starter blueprints, Lovelace dashboards, privacy mode, threshold tuning ([ADR-115](docs/adr/ADR-115-home-assistant-integration.md)). |
 | [**BFLD — Beamforming Feedback Layer for Detection**](v2/crates/wifi-densepose-bfld/README.md) | New privacy-gated WiFi sensing layer that measures + structurally prevents identity leakage from 802.11ac/ax Beamforming Feedback Information. Three type-enforced invariants (raw BFI never exits node, identity embedding is in-RAM-only, cross-site correlation cryptographically impossible via per-site BLAKE3 keyed hash + daily rotation). Ships full operator surface (`BfldPipeline`, `BfldPipelineHandle`, the Soul Signature §3.6 per-channel matcher `EnrolledMatcher`/`SoulMatchOracle` — experimental; named identity is data-gated, **measured** as not-separable on WiFi-only channels alone), MQTT topic router + HA-DISCO + availability + LWT, 3 operator HA blueprints, two runnable examples, eclipse-mosquitto:2 CI service container. 327+ tests. [ADR-118](docs/adr/ADR-118-bfld-beamforming-feedback-layer-for-detection.md) umbrella + sub-ADRs [119](docs/adr/ADR-119-bfld-frame-format-and-wire-protocol.md)/[120](docs/adr/ADR-120-bfld-privacy-class-and-hash-rotation.md)/[121](docs/adr/ADR-121-bfld-identity-risk-scoring.md)/[122](docs/adr/ADR-122-bfld-ruview-ha-matter-exposure.md)/[123](docs/adr/ADR-123-bfld-capture-path-nexmon-and-esp32.md). Research dossier: [`docs/research/BFLD/`](docs/research/BFLD/) (11 files, 13,544 words). |
