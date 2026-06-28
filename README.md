@@ -72,20 +72,20 @@ RuView turns ordinary WiFi into a contactless sensor. A $9 ESP32 board reads the
 >
 > Browse the full 105-module catalog (with practical descriptions, sizes, and difficulty) below in [🧩 Edge Module Catalog](#-edge-module-catalog), or visit [seed.cognitum.one/store](https://seed.cognitum.one/store).
 >
-> 🤗 **Pretrained weights**: download from [`ruvnet/wifi-densepose-pretrained`](https://huggingface.co/ruvnet/wifi-densepose-pretrained) — see [Loading the pretrained model](#loading-the-pretrained-model) below for one-command setup.
+> 🤗 **Pretrained weights**: download from [`ruvnet/wifi-densepose-pretrained`](https://huggingface.co/ruvnet/wifi-densepose-pretrained) — see [Quick Start](#-quick-start) for one-command setup.
 
 ```bash
 # Option 1: Docker (simulated data, no hardware needed)
-docker pull ruvnet/wifi-densepose:latest
-docker run -p 3000:3000 ruvnet/wifi-densepose:latest
+docker pull ruvnet/wifi-densepose:latest   # may take a minute
+docker run -p 3000:3000 ruvnet/wifi-densepose:latest   # use -it for interactive; if port 3000 is taken, try -p 3001:3000
 # Open http://localhost:3000
 
 # Option 2a: Live sensing with ESP32-S3 hardware ($9)
 # Flash firmware, provision WiFi, and start sensing:
-python -m esptool --chip esp32s3 --port COM9 --baud 460800 \
+python -m esptool --chip esp32s3 --port /dev/ttyUSB0 --baud 460800 \
   write_flash 0x0 bootloader.bin 0x8000 partition-table.bin \
   0xf000 ota_data_initial.bin 0x20000 esp32-csi-node.bin
-python firmware/esp32-csi-node/provision.py --port COM9 \
+python firmware/esp32-csi-node/provision.py --port /dev/ttyUSB0 \
   --ssid "YourWiFi" --password "secret" --target-ip 192.168.1.20
 
 # Option 2b: WiFi 6 + 802.15.4 research sensing with ESP32-C6 ($6-10, ADR-110)
@@ -354,7 +354,7 @@ Each module is a small signed binary (~400 KB) that runs alongside the WiFi-Dens
 | `sparse-recovery` | Recovers missing signal data from partial readings | 16 KB | Hard |
 | `temporal-compress` | Shrinks old data to save memory without losing meaning | 14 KB | Med |
 
-### 🌐 Network &mdash; <sub>1 modules</sub>
+### 🌐 Network &mdash; <sub>1 module</sub>
 
 | ID | What it does | Size | Difficulty |
 |----|--------------|-----:|:----------:|
@@ -653,3 +653,11 @@ MIT License — see [LICENSE](LICENSE) for details.
 ---
 
 **WiFi DensePose** — Privacy-preserving human pose estimation through WiFi signals.
+
+## Windows Note
+
+If running on Windows with Docker Desktop, pass CLI arguments differently:
+```
+docker run -p 3000:3000 ruvnet/wifi-densepose:latest -- --help
+```
+On Windows, use `--` to pass arguments through the Docker container to the binary inside.
